@@ -1,8 +1,5 @@
 #pragma once
 
-// Lets you roll mod-tap keys
-#define IGNORE_MOD_TAP_INTERRUPT
-
 // To use home row mods, can't have Auto shift on the Alphas
 #define NO_AUTO_SHIFT_ALPHA
 

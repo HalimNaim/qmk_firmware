@@ -2,25 +2,24 @@
 
 enum layers {
     _BL,
-    _MBL,
     _WNUM,
     _WSYM,
     _WFN,
     _WNAV,
-    _WMS,
-    _MNAV,
 };
 
 // home row mods
 #define WM_LGUI LGUI_T(KC_A)
-#define WM_LALT LALT_T(KC_O)
-#define WM_LCTL LCTL_T(KC_E)
-#define WM_LSFT LSFT_T(KC_U)
+#define WM_LALT LALT_T(KC_R)
+#define WM_LCTL LCTL_T(KC_S)
+#define WM_LSFT LSFT_T(KC_T)
 
-#define WM_RGUI LGUI_T(KC_S)
-#define WM_RALT LALT_T(KC_N)
-#define WM_RCTL LCTL_T(KC_T)
-#define WM_RSFT LSFT_T(KC_H)
+#define WM_RGUI LGUI_T(KC_O)
+#define WM_RALT LALT_T(KC_I)
+#define WM_RCTL LCTL_T(KC_E)
+#define WM_RSFT LSFT_T(KC_N)
+
+#define ESC_CTL LCTL_T(KC_ESC)
 
 #define WNUM LT(_WNUM, KC_BSPC)
 #define WSYM LT(_WSYM, KC_ENT)
@@ -28,33 +27,113 @@ enum layers {
 #define WNAV LT(_WNAV, KC_SPC)
 #define WMS LT(_WMS, KC_TAB)
 
-// Mac
-#define MBL TG(_MBL)
-#define MNAV LT(_MNAV, KC_SPC)
-
-#define M_HOME LCMD(KC_LEFT)
-#define M_END LCMD(KC_RGHT)
-
 enum custom_keycodes {
-    TO_MAC = SAFE_RANGE,
-    TO_WIN,
+    WM_TOGG = SAFE_RANGE,
+    WM_COPY,
+    WM_PAST,
+    WM_UNDO,
+    WM_REDO,
+    WM_HOME,
+    WM_PGDN,
+    WM_PGUP,
+    WM_END
 };
+
+bool mac_mode = true;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case TO_MAC:
+    case WM_TOGG:
         if (record->event.pressed) {
-            // from 1/quantum/process_keycode/process_magic.c
-            keymap_config.swap_lctl_lgui = keymap_config.swap_rctl_rgui = true;
-            layer_on(_MBL);
+          mac_mode = !mac_mode;
         } else {
             // when keycode is released
         }
         break;
-    case TO_WIN:
+    case WM_COPY:
         if (record->event.pressed) {
-            keymap_config.swap_lctl_lgui = keymap_config.swap_rctl_rgui = false;
-            layer_off(_MBL);
+          if (mac_mode) {
+            SEND_STRING(SS_LGUI("c"));
+          } else {
+            SEND_STRING(SS_LCTL("c"));
+          }
+        } else {
+         // when keycode is released
+        }
+        break;
+    case WM_PAST:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_LGUI("v"));
+          } else {
+            SEND_STRING(SS_LCTL("v"));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_UNDO:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_LGUI("z"));
+          } else {
+            SEND_STRING(SS_LCTL("z"));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_REDO:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_LGUI(SS_LSFT("z")));
+          } else {
+            SEND_STRING(SS_LCTL("y"));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_HOME:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_LEFT) SS_UP(X_LGUI));
+          } else {
+            SEND_STRING(SS_TAP(X_HOME));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_END:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_RIGHT) SS_UP(X_LGUI));
+          } else {
+            SEND_STRING(SS_TAP(X_END));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_PGDN:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_TAP(X_PGDN));
+          } else {
+            SEND_STRING(SS_TAP(X_PGDN));
+          }
+        } else {
+            // when keycode is released
+        }
+        break;
+    case WM_PGUP:
+        if (record->event.pressed) {
+          if (mac_mode) {
+            SEND_STRING(SS_TAP(X_PGUP));
+          } else {
+            SEND_STRING(SS_TAP(X_PGUP));
+          }
         } else {
             // when keycode is released
         }
@@ -65,29 +144,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BL] = LAYOUT(
-     KC_GRV , KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,                                     KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
-     KC_ESC , WM_LGUI, WM_LALT, WM_LCTL, WM_LSFT, KC_I   ,                                     KC_D   , WM_RSFT, WM_RCTL, WM_RALT, WM_RGUI, KC_MINS,
-     XXXXXXX, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , XXXXXXX, KC_CAPS, XXXXXXX, XXXXXXX, KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , XXXXXXX,
-                                XXXXXXX, KC_ESC , WNAV   , WMS    , TO_MAC , XXXXXXX, WSYM   , WNUM   , WFN    , XXXXXXX
+     KC_GRV , KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, XXXXXXX,
+     ESC_CTL, WM_LGUI, WM_LALT, WM_LCTL, WM_LSFT, KC_G   ,                                     KC_M   , WM_RSFT, WM_RCTL, WM_RALT, WM_RGUI, KC_QUOT,
+     WM_TOGG, KC_Z   , KC_X   , KC_C   , KC_D   , KC_V   , WM_COPY, WM_PAST, WM_REDO, WM_UNDO, KC_K   , KC_H   , KC_COMM, KC_DOT , KC_SLSH, XXXXXXX,
+                                XXXXXXX, XXXXXXX, KC_ESC , WNAV   , KC_TAB , WSYM   , WNUM   , WFN    , XXXXXXX, XXXXXXX
    ),
-   [_MBL] = LAYOUT(
-     _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-     _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                _______, _______, MNAV   , _______, TO_WIN , _______, _______, _______, _______, _______
-   ),
-
    [_WNUM] = LAYOUT(
      XXXXXXX, KC_LBRC, KC_7   , KC_8   , KC_9   , KC_RBRC,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
      XXXXXXX, KC_SCLN, KC_4   , KC_5   , KC_6   , KC_EQL ,                                     XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX,
      XXXXXXX, KC_GRV , KC_1   , KC_2   , KC_3   , KC_NUBS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                XXXXXXX, KC_DOT , KC_0   , KC_MINS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                                XXXXXXX, XXXXXXX, KC_DOT , KC_0   , KC_MINS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
    ),
    [_WSYM] = LAYOUT(
      XXXXXXX, KC_LCBR, KC_AMPR, KC_ASTR, KC_LPRN, KC_RCBR,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
      XXXXXXX, KC_COLN, KC_DLR , KC_PERC, KC_CIRC, KC_PLUS,                                     XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX,
      XXXXXXX, KC_TILD, KC_EXLM, KC_AT  , KC_HASH, KC_PIPE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                XXXXXXX, KC_LPRN, KC_RPRN, KC_UNDS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+     XXXXXXX, XXXXXXX, KC_LPRN, KC_RPRN, KC_UNDS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
    ),
    [_WFN] = LAYOUT(
      XXXXXXX, KC_F12 , KC_F7  , KC_F8  , KC_F9  , XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -97,20 +169,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    ),
    [_WNAV] = LAYOUT(
      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-     XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                                     XXXXXXX, KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, XXXXXXX,
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END , XXXXXXX,
-                                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-   ),
-   [_WMS] = LAYOUT(
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-     XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                                     XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, XXXXXXX,
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX,
-                                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN2, KC_BTN1, KC_BTN3, XXXXXXX
-   ),
-   [_MNAV] = LAYOUT(
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-     XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                                     XXXXXXX, KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, XXXXXXX,
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, M_HOME , KC_PGDN, KC_PGUP, M_END  , XXXXXXX,
+     XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                                     KC_CAPS, KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, XXXXXXX,
+     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, WM_HOME, WM_PGDN, WM_PGUP, WM_END , XXXXXXX,
                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
    ),
 };
