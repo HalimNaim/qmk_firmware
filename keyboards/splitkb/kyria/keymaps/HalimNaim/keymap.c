@@ -160,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_GRV , KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, XXXXXXX,
      ESC_CTL, WM_LGUI, WM_LALT, WM_LCTL, WM_LSFT, KC_G   ,                                     KC_M   , WM_RSFT, WM_RCTL, WM_RALT, WM_RGUI, KC_QUOT,
      WM_TOGG, KC_Z   , KC_X   , KC_C   , KC_D   , KC_V   , WM_COPY, WM_PAST, WM_REDO, WM_UNDO, KC_K   , KC_H   , KC_COMM, KC_DOT , KC_SLSH, XXXXXXX,
-                                XXXXXXX, XXXXXXX, KC_ESC , WNAV   , WMS    , WSYM   , WNUM   , WFN    , XXXXXXX, XXXXXXX
+                                XXXXXXX, DB_TOGG, KC_ESC , WNAV   , WMS    , WSYM   , WNUM   , WFN    , XXXXXXX, XXXXXXX
    ),
    [_WMS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     WM_REDO, WM_PAST, WM_COPY, WM_CUT , WM_UNDO, _______,
