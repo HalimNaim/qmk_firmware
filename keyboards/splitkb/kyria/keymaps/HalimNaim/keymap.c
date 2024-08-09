@@ -41,8 +41,7 @@ enum layers {
 #define CT_T    LCTL(KC_T)
 
 enum custom_keycodes {
-    WM_TOGG = SAFE_RANGE,
-    ESC_BS,
+    ESC_BS = SAFE_RANGE,
     WM_COPY,
     WM_PAST,
     WM_CUT,
@@ -51,16 +50,7 @@ enum custom_keycodes {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static bool mac_mode = true;
-
     switch (keycode) {
-    case WM_TOGG:
-        if (record->event.pressed) {
-          mac_mode = !mac_mode;
-        } else {
-            // when keycode is released
-        }
-        break;
     case ESC_BS:
         if (record->event.pressed) {
           SEND_STRING(SS_TAP(X_ESC));
@@ -73,55 +63,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
     case WM_COPY:
         if (record->event.pressed) {
-          if (mac_mode) {
-            SEND_STRING(SS_LGUI("c"));
-          } else {
-            SEND_STRING(SS_LCTL("c"));
-          }
+          SEND_STRING(SS_LGUI("c"));
         } else {
          // when keycode is released
         }
         break;
     case WM_PAST:
         if (record->event.pressed) {
-          if (mac_mode) {
-            SEND_STRING(SS_LGUI("v"));
-          } else {
-            SEND_STRING(SS_LCTL("v"));
-          }
+          SEND_STRING(SS_LGUI("v"));
         } else {
             // when keycode is released
         }
         break;
     case WM_CUT:
         if (record->event.pressed) {
-          if (mac_mode) {
-            SEND_STRING(SS_LGUI("x"));
-          } else {
-            SEND_STRING(SS_LCTL("x"));
-          }
+          SEND_STRING(SS_LGUI("x"));
         } else {
          // when keycode is released
         }
         break;
     case WM_UNDO:
         if (record->event.pressed) {
-          if (mac_mode) {
-            SEND_STRING(SS_LGUI("z"));
-          } else {
-            SEND_STRING(SS_LCTL("z"));
-          }
+          SEND_STRING(SS_LGUI("z"));
         } else {
             // when keycode is released
         }
         break;
     case WM_REDO:
         if (record->event.pressed) {
-          if (mac_mode) {
-            SEND_STRING(SS_LGUI(SS_LSFT("z")));
-          } else {
-            SEND_STRING(SS_LCTL("y"));
-          }
+          SEND_STRING(SS_LGUI(SS_LSFT("z")));
         } else {
             // when keycode is released
         }
@@ -138,25 +108,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    [_BS] = LAYOUT(
      KC_EQL , KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, KC_MINS,
      CT_ESC , WM_LSFT, WM_LCTL, WM_LALT, WM_LGUI, KC_G   ,                                     KC_M   , WM_RGUI, WM_RALT, WM_RCTL, WM_RSFT, KC_QUOT,
-     KC_GRV , Z_CP   , KC_X   , KC_C   , KC_D   , KC_V   , KC_LCBR, KC_LBRC, KC_RBRC, KC_RCBR, KC_K   , KC_H   , KC_COMM, KC_DOT , KC_SLSH, KC_BSLS,
+     KC_GRV , Z_CP   , KC_X   , KC_C   , KC_D   , KC_V   , KC_LPRN, KC_LBRC, KC_RBRC, KC_RPRN, KC_K   , KC_H   , KC_COMM, KC_DOT , KC_SLSH, KC_BSLS,
                                 KC_LEFT, KC_RGHT, CT_T   , KC_BSPC, TO(_NM), KC_ENT , KC_SPC , CT_RBRC, KC_DOWN, KC_UP
    ),
    [_NM] = LAYOUT(
-     _______, ESC_BS , KC_7   , KC_8   , KC_9   , KC_0   ,                                     KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, KC_BSLS, _______,
+     _______, ESC_BS , KC_7   , KC_8   , KC_9   , KC_0   ,                                     KC_LBRC, KC_RBRC, XXXXXXX, TO(_FN), KC_BSLS, _______,
      _______, NM_LSFT, NM_LCTL, NM_LALT, NM_LGUI, KC_MINS,                                     KC_TAB , NM_RGUI, NM_RALT, NM_RCTL, NM_RSFT, _______,
-     _______, GRV_CP , KC_1   , KC_2   , KC_3   , KC_EQL , _______, _______, _______, _______, CW_TOGG, KC_UNDS, _______, _______, TG(_FN), _______,
+     _______, GRV_CP , KC_1   , KC_2   , KC_3   , KC_EQL , _______, _______, _______, _______, CW_TOGG, KC_UNDS, _______, _______, _______, _______,
                                 _______, _______, _______, _______, _______, TO(_BS), _______, _______, _______, _______
    ),
    [_FN] = LAYOUT(
-     _______, XXXXXXX, KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+     _______, XXXXXXX, KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                                     XXXXXXX, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX, _______,
      _______, XXXXXXX, KC_F4  , KC_F5  , KC_F6  , KC_F11 ,                                     XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,
-     _______, _______, KC_F1  , KC_F2  , KC_F3  , KC_F12 , _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+     _______, _______, KC_F1  , KC_F2  , KC_F3  , KC_F12 , _______, _______, _______, _______, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, _______,
                                 _______, _______, _______, _______, _______, TO(_BS), _______, _______, _______, _______
    ),
    [_CP] = LAYOUT(
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, WM_UNDO, WM_REDO, XXXXXXX,                                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-      XXXXXXX, XXXXXXX, WM_CUT , WM_COPY, WM_PAST, WM_TOGG, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, WM_CUT , WM_COPY, WM_PAST, XXXXXXX, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                  _______, _______, _______, _______, _______, TO(_BS), _______, _______, _______, _______
     ),
 };

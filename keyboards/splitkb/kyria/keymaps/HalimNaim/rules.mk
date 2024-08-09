@@ -2,7 +2,7 @@ AUTO_SHIFT_ENABLE = yes
 MOUSEKEY_ENABLE = no
 
 BOOTMAGIC_ENABLE = no      # Enable Bootmagic Lite
-EXTRAKEY_ENABLE = no       # Audio control and System control
+EXTRAKEY_ENABLE = yes      # Audio control and System control
 CONSOLE_ENABLE = no        # Console for debug
 COMMAND_ENABLE = no        # Commands for debug and configuration
 NKRO_ENABLE = no           # Enable N-Key Rollover
@@ -17,3 +17,5 @@ TAP_DANCE_ENABLE = no      # The documentation claims that this adds almost 1k
 
 CAPS_WORD_ENABLE = yes
 ALLOW_WARNINGS = no        # Needed for older tags. `[-Warray-bounds]' turns into an error if not set
+
+VIA_ENABLE = yes
